@@ -1,3 +1,5 @@
+require 'pry'
+require 'pry-byebug'
 class GildedRose
 
   def initialize(items)
