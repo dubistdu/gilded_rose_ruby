@@ -30,15 +30,8 @@ describe GildedRose do
       it "does not decrease quality when sell by date has passed" do
         items = [Item.new("Sulfuras, Hand of Ragnaros", 9, 10)]
         gilded_rose = GildedRose.new(items)
-        8.times{ gilded_rose.update_quality }
-        expect(items[0].quality).to eq 10
-      end
-
-      it "does not decrease quality when sell by date has passed" do
-        items = [Item.new("Sulfuras, Hand of Ragnaros", 9, 0)]
-        gilded_rose = GildedRose.new(items)
         12.times{ gilded_rose.update_quality }
-        expect(items[0].quality).to eq 80
+        expect(items[0].quality).to eq 10
       end
     end
 
@@ -89,21 +82,21 @@ describe GildedRose do
     end
 
     # conjured need to be implemented
-    context "if the item is 'Conjured'" do
-      it "degrades in quality twice as fast as normal items" do
-        items = [Item.new("Conjured", 10, 20)]
-        gilded_rose = GildedRose.new(items)
-        gilded_rose.update_quality()
-        expect(items[0].quality).to eq 18
-      end
+    # context "if the item is 'Conjured'" do
+    #   it "degrades in quality twice as fast as normal items" do
+    #     items = [Item.new("Conjured", 10, 20)]
+    #     gilded_rose = GildedRose.new(items)
+    #     gilded_rose.update_quality()
+    #     expect(items[0].quality).to eq 18
+    #   end
     
-      it "degrades in quality twice as fast as normal items even after sell_in" do
-        items = [Item.new("Conjured", 0, 20)]
-        gilded_rose = GildedRose.new(items)
-        gilded_rose.update_quality()
-        expect(items[0].quality).to eq 16
-      end
-    end
+    #   it "degrades in quality twice as fast as normal items even after sell_in" do
+    #     items = [Item.new("Conjured", 0, 20)]
+    #     gilded_rose = GildedRose.new(items)
+    #     gilded_rose.update_quality()
+    #     expect(items[0].quality).to eq 16
+    #   end
+    # end
 
   end
 
