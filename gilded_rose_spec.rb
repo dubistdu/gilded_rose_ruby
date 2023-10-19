@@ -81,6 +81,28 @@ describe GildedRose do
     
     end
 
+    it "increatese item quality" do
+      items = [Item.new("Potato", 1, 10)]
+      gilded_rose = GildedRose.new(items)
+      item = items[0]
+      expect(gilded_rose.increase_item_quality(item)).to eq(11)
+    end
+
+    it "decreases item quality" do
+      items = [Item.new("Potato", 1, 10)]
+      gilded_rose = GildedRose.new(items)
+      item = items[0]
+      expect(gilded_rose.decreases_item_quality(item)).to eq(9)
+    end
+
+    it "decreases sell_in" do
+      items = [Item.new("Potato", 5, 10)]
+      gilded_rose = GildedRose.new(items)
+      item = items[0]
+      expect(gilded_rose.decreases_sell_in(item)).to eq(4)
+    end
+
+
     # conjured need to be implemented
     # context "if the item is 'Conjured'" do
     #   it "degrades in quality twice as fast as normal items" do

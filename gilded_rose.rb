@@ -9,52 +9,72 @@ class GildedRose
     @items = items
   end
 
-  def update_quality()
+  # break down the method
+  def update_quality
     @items.each do |item|
-      if item.name != AGED_BRIE && item.name != BACKSTAGE_PASSES
-        if item.quality > 0
-          if item.name != SULFRAS
-            item.quality = item.quality - 1
-          end
+      if !brie_and_backstage(item)
+        if item.quality > 0 && !sulfras(item)
+          decreases_item_quality(item)
         end
       else
-        if item.quality < 50
-          item.quality = item.quality + 1
-          if item.name == BACKSTAGE_PASSES
-            if item.sell_in < 11
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
-            end
-            if item.sell_in < 6
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
-            end
-          end
+        return if item.quality >= 50
+        increase_item_quality(item)
+        if backstage_passes(item) && item.sell_in < 11
+            increase_item_quality(item)
+        end
+        if backstage_passes(item) && item.sell_in < 6
+            increase_item_quality(item)
         end
       end
-      if item.name != SULFRAS
-        item.sell_in = item.sell_in - 1
+
+      if !sulfras
+        decreases_sell_in(item)
       end
-      if item.sell_in < 0
-        if item.name != AGED_BRIE
-          if item.name != BACKSTAGE_PASSES
-            if item.quality > 0
-              if item.name != SULFRAS
-                item.quality = item.quality - 1
-              end
-            end
-          else
-            item.quality = item.quality - item.quality
-          end
+
+      if item.sell_in < 0 && aged_brie(item) && item.quality < 50
+        increase_item_quality(item)
+      end
+
+      if item.sell_in < 0 && !aged_brie(item)
+        if !sulfras_and_backstage(item) && item.quality > 0
+          decreases_item_quality(item)
         else
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+          item.quality = 0
         end
       end
     end
+  end
+
+  def increase_item_quality(item)
+    item.quality += 1
+  end
+
+  def decreases_item_quality(item)
+    item.quality -= 1
+  end
+
+  def decreases_sell_in(item)
+    item.sell_in -= 1
+  end
+
+  def brie_and_backstage(item)
+    aged_brie(item) || backstage_passes(item)
+  end
+
+  def sulfras_and_backstage(item)
+    sulfras(item) || backstage_passes(item)
+  end
+
+  def aged_brie(item)
+    item.name == AGED_BRIE
+  end
+  
+  def backstage_passes(item)
+    item.name == BACKSTAGE_PASSES
+  end
+
+  def sulfras(item)
+    item.name == SULFRAS
   end
 end
 
