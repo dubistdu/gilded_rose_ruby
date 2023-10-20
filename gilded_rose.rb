@@ -27,7 +27,7 @@ class GildedRose
         end
       end
 
-      if !sulfras
+      if !sulfras(item)
         decreases_sell_in(item)
       end
 
