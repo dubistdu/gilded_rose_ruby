@@ -9,60 +9,71 @@ class GildedRose
     @items = items
   end
 
-  # break down the method
+
+  # it has too many responsibilities
+  # Single responsibility principle - broke down update_quality to smaller methods, each method has one responsibility
   def update_quality
     @items.each do |item|
-      if !brie_and_backstage(item)
-        if item.quality > 0 && !sulfras(item)
-          decreases_item_quality(item)
-        end
+      next if item.quality < 0 || item.quality > 50
+
+      if sulfras(item)
+        next # Sulfuras doesn't change in quality
+      elsif aged_brie(item)
+        handle_aged_brie(item)
+      elsif backstage_passes(item)
+        handle_backstage_passes(item)
       else
-        return if item.quality >= 50
-        increase_item_quality(item)
-        if backstage_passes(item) && item.sell_in < 11
-            increase_item_quality(item)
-        end
-        if backstage_passes(item) && item.sell_in < 6
-            increase_item_quality(item)
-        end
-      end
-
-      if !sulfras(item)
-        decreases_sell_in(item)
-      end
-
-      if item.sell_in < 0 && aged_brie(item) && item.quality < 50
-        increase_item_quality(item)
-      end
-
-      if item.sell_in < 0 && !aged_brie(item)
-        if !sulfras_and_backstage(item) && item.quality > 0
-          decreases_item_quality(item)
-        else
-          item.quality = 0
-        end
+        handle_normal_item(item)
       end
     end
   end
 
-  def increase_item_quality(item)
+  private
+  # Encaalpsulation - each method specific to updating the quality of different types of items
+  def handle_aged_brie(item)
+    increase_quality(item)
+    decrease_sell_in(item)
+    if item.sell_in < 0 && item.quality < 50
+      increase_quality(item)
+    end
+  end
+
+  # 10 days or less until the concert, the quality of the "Backstage passes" increases by an additional point (total of 2 points on that day).
+  def handle_backstage_passes(item)
+    increase_quality(item)
+    increase_quality(item) if item.sell_in < 11
+    increase_quality(item) if item.sell_in < 6
+    decrease_sell_in(item)
+    item.quality = 0 if item.sell_in < 0
+  end
+
+  def handle_normal_item(item)
+    decrease_quality(item)
+    decrease_sell_in(item)
+    if item.sell_in < 0
+      !sulfras_and_backstage(item) ? decrease_quality(item) : item.quality = 0
+    end
+  end
+
+# Refactoring for DRY Principle:
+# Instead of repeating the logic for increasing and decreasing item quality
+# within each item's specific logic, these methods are extractedinto separate methods.
+# This approach:
+# - Enhances code readability by having a clear, single-purpose function for each action.
+# - DRY principle
+# - Simplifies future modifications, as changes to quality adjustment logic
+#   only need to be made in one place.
+  def increase_quality(item)
+    return if item.quality >= 50
     item.quality += 1
   end
 
-  def decreases_item_quality(item)
-    item.quality -= 1
+  def decrease_quality(item)
+    item.quality -= 1 if item.quality > 0
   end
 
-  def decreases_sell_in(item)
+  def decrease_sell_in(item)
     item.sell_in -= 1
-  end
-
-  def brie_and_backstage(item)
-    aged_brie(item) || backstage_passes(item)
-  end
-
-  def sulfras_and_backstage(item)
-    sulfras(item) || backstage_passes(item)
   end
 
   def aged_brie(item)
@@ -76,6 +87,10 @@ class GildedRose
   def sulfras(item)
     item.name == SULFRAS
   end
+
+  def sulfras_and_backstage(item)
+    sulfras(item) || backstage_passes(item)
+  end
 end
 
 class Item
@@ -87,7 +102,7 @@ class Item
     @quality = quality
   end
 
-  def to_s()
+  def to_s
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end
