@@ -12,12 +12,14 @@ class Item
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 
-  def handle_normal_item
+  def handle_item
+    # return @quality if @quality < 0 || @quality > 50
     decrease_quality
     decrease_sell_in
     if @sell_in < 0
-      !sulfras_and_backstage ? decrease_quality : @quality = 0
+      !sulfras_and_backstage ? decrease_quality : @quality
     end
+    @quality
   end
 
   def sulfras_and_backstage

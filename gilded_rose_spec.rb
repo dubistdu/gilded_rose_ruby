@@ -29,7 +29,7 @@ describe GildedRose do
 
     context "when the item is 'Sulfuras'" do
       it "never decreases in quality or sell_in" do
-        items = [Item.new("Sulfuras, Hand of Ragnaros", 0, 80)]
+        items = [Sulfras.new("Sulfuras, Hand of Ragnaros", 0, 80)]
         GildedRose.new(items).update_quality
         expect(items[0].quality).to eq 80
         expect(items[0].sell_in).to eq 0
