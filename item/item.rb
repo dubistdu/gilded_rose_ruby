@@ -1,11 +1,11 @@
-# move items to Item
+require_relative 'quality'
 class Item
   attr_accessor :name, :sell_in, :quality
 
   def initialize(name, sell_in, quality)
     @name = name
     @sell_in = sell_in
-    @quality = quality
+    @quality_obj = Quality.new(quality)
   end
 
   def to_s
@@ -14,28 +14,20 @@ class Item
 
   def handle_item
     # return @quality if @quality < 0 || @quality > 50
-    decrease_quality
+    @quality_obj.decrease_value
     decrease_sell_in
     if @sell_in < 0
-      !sulfras_and_backstage ? decrease_quality : @quality
+      @quality_obj.decrease_value
     end
-    @quality
-  end
-
-  def sulfras_and_backstage
-    name == Sulfras::SULFRAS || name == BackstagePass::BACKSTAGE_PASSES
-  end
-
-  def increase_quality
-    return if @quality >= 50
-    @quality += 1
-  end
-
-  def decrease_quality
-    @quality -= 1 if @quality > 0
+    quality
   end
 
   def decrease_sell_in
     @sell_in -= 1
   end
+
+  def quality
+    @quality_obj.value
+  end
 end
+

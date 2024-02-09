@@ -3,7 +3,6 @@ require_relative '../item/sulfras'
 require_relative '../item/backstage_pass'
 require_relative '../item/item'
 
-
 RSpec.describe Item do
   describe "#handle_item" do
     let(:normal_item) { Item.new("normal", 10, 20) }

@@ -6,7 +6,7 @@ RSpec.describe Sulfras do
       it "does not change quality" do
         sulfras = Sulfras.new("Sulfuras, Hand of Ragnaros", 10, 20)
         sulfras.handle_item
-        expect(sulfras.quality).to eq(20)
+        expect(sulfras.quality).to eq(80)
       end
     end
     
@@ -14,7 +14,7 @@ RSpec.describe Sulfras do
       it "does not change quality" do
         sulfras = Sulfras.new("Sulfuras, Hand of Ragnaros", -1, 20)
         sulfras.handle_item
-        expect(sulfras.quality).to eq(20)
+        expect(sulfras.quality).to eq(80)
       end
     end
     
@@ -22,7 +22,7 @@ RSpec.describe Sulfras do
       it "does not increase quality" do
         sulfras = Sulfras.new("Sulfuras, Hand of Ragnaros", 5, 50)
         sulfras.handle_item
-        expect(sulfras.quality).to eq(50)
+        expect(sulfras.quality).to eq(80)
       end
     end
   end

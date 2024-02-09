@@ -6,8 +6,7 @@ class Sulfras < Item
     @name == SULFRAS
   end
 
-  def handle_item
+  def quality
     80
   end
-
 end
